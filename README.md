@@ -14,7 +14,9 @@ RESPECT COPYRIGHT!
  
 usage: dhcping -c <ciaddr> -g <giaddr> -h <chaddr> -s <server-ip>  
  
+ 
 options:  
+
  -c <ciaddr>      -> Client IP Address  
  -g <giaddr>      -> Gateway IP Address  
  -h <chaddr>      -> Client Hardware Address  
@@ -24,11 +26,15 @@ options:
  -v               -> verbose output  
  -t <maxwait>     -> timeout (sec.) 
  
+ 
 DHCP Options: 
+
  -p <vendor-mode> -> option 60 vendor class id string ( eg. "docsis" max.10 char!)  
  -o <relay-mac>   -> option 82 remote id, macadress of dhcp relay agent  
  
+ 
 DHCP Message Types (53): 
+
  -d               -> (1) discover   
  -r               -> (3) request  
  -n               -> keep lease active after a request (no auto release)  
