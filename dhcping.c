@@ -1,7 +1,3 @@
-///
-// dhcping.c,v 1.4fbeta aneuhold
-//
-
 /*
  * Copyright 2000, 2001, 2002 by Edwin Groothuis, edwin@mavetju.org
  *
@@ -31,7 +27,9 @@
 /*
  *
  * forked from dhcping v1.3
- * modifications by Andreas Neuhold <aneuhold@lgi.com>
+ * modifications by nean <nean.and.i@gmail.com>
+ * 
+ * dhcping.c,v 1.4fbeta nean 
  *
  * USE DHCPDUMP FOR MONITORING PURPOSES!
  * WARNING: FOR DHCP TESTING PURPOSES ONLY!
@@ -42,6 +40,7 @@
  * - better handling of option values
  * 
 */
+
 
 #include <sys/types.h>
 #include <sys/socket.h>
