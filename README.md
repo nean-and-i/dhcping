@@ -10,6 +10,7 @@ RESPECT COPYRIGHT!
 
 
  
+ 
 usage: dhcping -c <ciaddr> -g <giaddr> -h <chaddr> -s <server-ip>  
  
 options:  
@@ -33,4 +34,6 @@ DHCP Message Types (53):
  -f               -> (4) decline  
  -e               -> (7) release  
  -i               -> (8) inform  
- -l               -> (19) leasequery (requesting: 51,60,61,82) ");
+ -l               -> (19) leasequery (requesting: 51,60,61,82)
+ 
+ 
