@@ -13,7 +13,7 @@
 
 
 
-SHELL = /bin/bash
+SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = .
@@ -38,10 +38,10 @@ pkglibdir = $(libdir)/dhcping
 pkgincludedir = $(includedir)/dhcping
 top_builddir = .
 
-ACLOCAL = ${SHELL} /home/aneuhold/Developer/svn/cnr/trunk/scripts/dhcping/missing --run aclocal
-AUTOCONF = ${SHELL} /home/aneuhold/Developer/svn/cnr/trunk/scripts/dhcping/missing --run autoconf
-AUTOMAKE = ${SHELL} /home/aneuhold/Developer/svn/cnr/trunk/scripts/dhcping/missing --run automake
-AUTOHEADER = ${SHELL} /home/aneuhold/Developer/svn/cnr/trunk/scripts/dhcping/missing --run autoheader
+ACLOCAL = ${SHELL} /mnt/git/dhcping/missing --run aclocal
+AUTOCONF = ${SHELL} /mnt/git/dhcping/missing --run autoconf
+AUTOMAKE = ${SHELL} /mnt/git/dhcping/missing --run automake
+AUTOHEADER = ${SHELL} /mnt/git/dhcping/missing --run autoheader
 
 INSTALL = /usr/bin/install -c
 INSTALL_PROGRAM = ${INSTALL}
@@ -61,7 +61,7 @@ host_alias =
 host_triplet = x86_64-unknown-linux-gnu
 target_alias = 
 target_triplet = x86_64-unknown-linux-gnu
-AMTAR = ${SHELL} /home/aneuhold/Developer/svn/cnr/trunk/scripts/dhcping/missing --run tar
+AMTAR = ${SHELL} /mnt/git/dhcping/missing --run tar
 AWK = gawk
 CC = gcc
 DEPDIR = .deps
@@ -73,7 +73,7 @@ PACKAGE = dhcping
 VERSION = 1.2
 am__include = include
 am__quote = 
-install_sh = /home/aneuhold/Developer/svn/cnr/trunk/scripts/dhcping/install-sh
+install_sh = /mnt/git/dhcping/install-sh
 
 bin_PROGRAMS = dhcping
 dhcping_SOURCES = dhcping.c dhcping_options.h
@@ -132,7 +132,7 @@ $(top_builddir)/config.status: $(srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 $(srcdir)/configure:  $(srcdir)/configure.in $(ACLOCAL_M4) $(CONFIGURE_DEPENDENCIES)
 	cd $(srcdir) && $(AUTOCONF)
 
-$(ACLOCAL_M4):  configure.in 
+$(ACLOCAL_M4):  configure.in
 	cd $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
@@ -157,7 +157,7 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-dhcping$(EXEEXT): $(dhcping_OBJECTS) $(dhcping_DEPENDENCIES) 
+dhcping$(EXEEXT): $(dhcping_OBJECTS) $(dhcping_DEPENDENCIES)
 	@rm -f dhcping$(EXEEXT)
 	$(LINK) $(dhcping_LDFLAGS) $(dhcping_OBJECTS) $(dhcping_LDADD) $(LIBS)
 

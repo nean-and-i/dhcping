@@ -132,7 +132,7 @@ $(top_builddir)/config.status: $(srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 $(srcdir)/configure:  $(srcdir)/configure.in $(ACLOCAL_M4) $(CONFIGURE_DEPENDENCIES)
 	cd $(srcdir) && $(AUTOCONF)
 
-$(ACLOCAL_M4):  configure.in 
+$(ACLOCAL_M4):  configure.in
 	cd $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
@@ -157,7 +157,7 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-dhcping$(EXEEXT): $(dhcping_OBJECTS) $(dhcping_DEPENDENCIES) 
+dhcping$(EXEEXT): $(dhcping_OBJECTS) $(dhcping_DEPENDENCIES)
 	@rm -f dhcping$(EXEEXT)
 	$(LINK) $(dhcping_LDFLAGS) $(dhcping_OBJECTS) $(dhcping_LDADD) $(LIBS)
 
