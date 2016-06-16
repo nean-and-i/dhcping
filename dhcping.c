@@ -27,18 +27,19 @@
 /*
  *
  * forked from dhcping v1.3
- * modifications by nean <nean.and.i@gmail.com>
- * 
- * dhcping.c,v 1.4fbeta nean 
+ * modifications by <neuhold.an@gmail.com>
+ *
+ * dhcping.c,v 1.4f <neuhold.an@gmail.com>
+ * changelog: dhcpleaseactive
  *
  * USE DHCPDUMP FOR MONITORING PURPOSES!
  * WARNING: FOR DHCP TESTING PURPOSES ONLY!
  *
  * RESPECT COPYRIGHT!
- * 
+ *
  * todo:
  * - better handling of option values
- * 
+ *
 */
 
 
@@ -77,13 +78,14 @@ void dhcp_request(char *ipaddr,char *gwaddr,char *hardware,char *opt82,char *opt
 void dhcp_release(char *ipaddr,char *gwaddr,char *hardware);
 void dhcp_decline(char *ipaddr,char *gwaddr,char *hardware);
 void dhcp_leasequery(char *ipaddr,char *gwaddr,char *hardware);
+void dhcp_leaseactive(char *ipaddr,char *gwaddr,char *hardware);
 void dhcp_packet(int type,char *ciaddr,char *opt50,char *opt60,char *opt82,char *gwaddr,char *hardware);
 
 
 int dhcp_socket;
 struct sockaddr_in dhcp_to;
 int _serveripaddress;
-int inform,request,leasequery,decline,discover,norelease,verbose,release,VERBOSE,quiet;
+int inform,request,leasequery,leaseactive,decline,discover,norelease,verbose,release,VERBOSE,quiet;
 char *ci,*gi,*server,*hw,*opt82mac,*opt60;
 unsigned char serveridentifier[4];
 int maxwait=3;
@@ -99,37 +101,57 @@ void doargs(int argc,char **argv)
 
   if (argc==1)
     {
-      printf("dhcping v1.4fbeta \
-\n\n \
-usage: dhcping -c <ciaddr> -g <giaddr> -h <chaddr> -s <server-ip> \n \
-\n \
-options: \n \
- -c <ciaddr>      -> Client IP Address \n \
- -g <giaddr>      -> Gateway IP Address \n \
- -h <chaddr>      -> Client Hardware Address \n \
- -s <server-ip>   -> Server IP Address \n \
-\n \
- -q               -> quiet \n \
- -v               -> verbose output \n \
+      printf("dhcping v1.4f <neuhold.an@gmail.com>\
+\n\
+\n\
+usage: dhcping -c <ciaddr> -g <giaddr> -h <chaddr> -s <server-ip> \
+\n\
+\n\
+options: \n\
+ -c <ciaddr>      -> Client IP Address \n\
+ -g <giaddr>      -> Gateway IP Address \n\
+ -h <chaddr>      -> Client Hardware Address \n\
+ -s <server-ip>   -> Server IP Address \n\
+\n\
+ -q               -> quiet \n\
+ -v               -> verbose output \n\
  -t <maxwait>     -> timeout (sec.) \
-\n\n \
-DHCP Options:\n \
- -p <vendor-mode> -> option 60 vendor class id string ( eg. \"docsis\" max.10 char!) \n \
- -o <relay-mac>   -> option 82 remote id, macadress of dhcp relay agent \n \
-\n\n \
-DHCP Message Types (53):\n \
- -d               -> (1) discover  \n \
- -r               -> (3) request \n \
- -n               -> keep lease active after a request (no auto release) \n \
- -f               -> (4) decline \n \
- -e               -> (7) release \n \
- -i               -> (8) inform \n \
- -l               -> (19) leasequery (requesting: 51,60,61,82) \n\n");
+\n\
+\n\
+DHCP Message Types (53):\n\
+ -d               -> (1)  discover  \n\
+ -r               -> (3)  request \n\
+ -f               -> (4)  decline \n\
+ -e               -> (7)  release \n\
+ -i               -> (8)  inform \n\
+ -l               -> (10) leasequery (requesting: 51,60,61,82) \n\
+ -a               -> (13) leaseactive \n\
+ -n               -> keep lease active after a request (no auto release) \
+\n\
+\n\
+DHCP Options:\n\
+ -p <vendor-mode> -> option 60 vendor class id string ( eg. \"docsis\" max.10 char!) \n\
+ -o <relay-mac>   -> option 82 remote id, macadress of dhcp relay agent \
+\n\
+\n\
+\n\
+EXAMPLES: \n\
+  leasequery\n\
+    localhost:   10.34.134.217\n\
+    dhcp server: 10.34.134.215\n\
+    macadress:   28:be:9b:ab:50:ce\
+\n\
+\n\
+  dhcping -v -l -h 28:be:9b:ab:50:ce -g 10.34.134.217 -s 10.34.134.215 \
+\n\
+\n\
+");
+
       exit(1);
     }
 
 
-  while ((ch = getopt(argc,argv,"c:g:h:iqrefldns:t:o:p:vV"))>0)
+  while ((ch = getopt(argc,argv,"c:g:h:iqrefladns:t:o:p:vV"))>0)
     {
       switch (ch)
         {
@@ -153,6 +175,9 @@ DHCP Message Types (53):\n \
           break;
         case 'l':
           leasequery=1;
+          break;
+        case 'a':
+          leaseactive=1;
           break;
         case 'd':
           discover=1;
@@ -191,9 +216,9 @@ DHCP Message Types (53):\n \
   //printf("\n\nDEBUG: %s\n\n", opt60);
 
 
-  if ((request && inform) || (request && discover) || (request && leasequery) || (discover && leasequery) || (inform && leasequery ))
+  if ((request && inform) || (request && discover) || (request && leasequery) || (discover && leasequery) || (inform && leasequery) || (request && leaseactive) || (discover && leaseactive) || (inform && leaseactive))
     {
-      fprintf(stderr,"\nError: d,r,l,i are mutaully exclusive!\n");
+      fprintf(stderr,"\nError: d,r,l,i,a are mutaully exclusive!\n");
       exit(1);
     }
 
@@ -206,7 +231,7 @@ DHCP Message Types (53):\n \
 
 
   // DHCPREQUEST is by default.
-  if ((!inform && !leasequery && !discover && !release && !decline) || request)
+  if ((!inform && !leasequery && !discover && !release && !decline && !leaseactive ) || request)
     {
       request=1;
       if (ci == "0.0.0.0")
@@ -306,6 +331,11 @@ int main(int argc,char **argv)
       if (VERBOSE) puts("DHCP LEASEQUERY");
       dhcp_leasequery(ci,gi,hw);
     }
+  if (leaseactive)
+    {
+      if (VERBOSE) puts("DHCP LEASEACTIVE");
+      dhcp_leaseactive(ci,gi,hw);
+    }
   if (discover)
     {
       if (VERBOSE) puts("DHCP DISCOVER");
@@ -388,6 +418,7 @@ void dhcp_setup(char *serveripaddress)
   /*
   // setup sending socket
   */
+  // to be removed to ensure static compiling, TODO!
   if ((servent=getservbyname("bootps",0))==NULL)
     {
       perror("getservbyname: bootps");
@@ -424,7 +455,7 @@ void dhcp_setup(char *serveripaddress)
       exit(1);
     }
 
-
+  // to be removed to ensure static compiling, TODO!
   // in some cases needs to be changed from bootps to bootps
   if (leasequery || discover || (gi != "0.0.0.0"))
     {
@@ -474,8 +505,13 @@ void dhcp_inform(char *ipaddr,char *gwaddr,char *hardware,char *opt82,char *opt6
 }
 void dhcp_leasequery(char *ipaddr,char *gwaddr,char *hardware)
 {
-//  dhcp_packet(13,ipaddr,NULL,NULL,NULL,gwaddr,hardware);
+//  dhcp_packet(10,ipaddr,NULL,NULL,NULL,gwaddr,hardware);
   dhcp_packet(10,ipaddr,NULL,NULL,NULL,gwaddr,hardware);
+}
+void dhcp_leaseactive(char *ipaddr,char *gwaddr,char *hardware)
+{
+//  dhcp_packet(13,ipaddr,NULL,NULL,NULL,gwaddr,hardware);
+  dhcp_packet(13,ipaddr,NULL,NULL,NULL,gwaddr,hardware);
 }
 void dhcp_discover(char *ipaddr,char *gwaddr,char *hardware,char *opt82,char *opt60)
 {
@@ -1050,4 +1086,3 @@ void dhcp_close(void)
 {
   close(dhcp_socket);
 }
-
