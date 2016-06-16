@@ -12,7 +12,6 @@ RESPECT COPYRIGHT!
 
  
 ```
-
 dhcping v1.4f <neuhold.an@gmail.com>
 
 
