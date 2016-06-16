@@ -1,4 +1,4 @@
-dhcping v1.4f
+# dhcping v1.4f
 
 
 DHCP test and autiting tool!
@@ -11,7 +11,8 @@ RESPECT COPYRIGHT!
 
 
  
- 
+```
+
 dhcping v1.4f <neuhold.an@gmail.com>
 
 
@@ -54,3 +55,4 @@ EXAMPLES:
 
 
   dhcping -v -l -h 28:be:9b:ab:50:ce -g 10.34.134.217 -s 10.34.134.215 
+```
