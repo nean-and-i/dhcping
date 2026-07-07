@@ -1,5 +1,31 @@
 $Id: CHANGES,v 1.2 2002/01/27 02:08:20 mavetju Exp $
 
+version 1.4f (fork by <nean.and.i@gmail.com>, based on 1.3)
+	- Added new DHCP message types: DISCOVER (-d), DECLINE (-f),
+	  LEASEQUERY (-l), LEASEACTIVE (-a), and standalone RELEASE (-e)
+	- Added -n to keep a lease active after a REQUEST (no auto-release)
+	- Added -o <relay-mac> to inject DHCP option 82 (relay agent
+	  remote-id) and -p <vendor> for option 60 (vendor class id, max 10
+	  chars); -v now controls verbose output
+	- Added command-line validation: message-type flags are mutually
+	  exclusive, discover rejects a client IP, and advisory warnings for
+	  REQUEST without a client IP or with both ci+gi set
+	- Bind to the server port (bootps/67) instead of bootpc/68 for
+	  leasequery, discover, or when a giaddr is set (relay-agent mode)
+	- Request list (option 55) for leasequery/inform/leaseactive now
+	  asks for options 51, 60, 61, 82; requested-IP/server-id/opt60/opt82
+	  are omitted for inform, decline, leaseactive and leasequery
+	- Removed the client-identifier (option 61) from outgoing packets
+	  (caused a leasequery issue, dropped in 1.4d)
+	- Greatly expanded response decoding: added options 2, 4, 5, 6, 7,
+	  15, 42, 51, 55, 60, 66, 67, 82, 122, 161, 162, 163 and 177,
+	  including relay-agent sub-options and CableLabs/PacketCable blocks
+	- Added printTime32() to render lease/time values as w/d/h/m/s
+	  ("Lease reserved" for 365 days)
+	- dhcp_dump() now prints "no entry found" for empty ciaddr/chaddr and
+	  formats chaddr by hlen; raw hex dump disabled by default
+	- Portability shims (uchar, socklen_t) and GNU-style reformatting
+
 version 1.2
 	- Changed documentation into .pod format
 	- Added autoconfiguration script

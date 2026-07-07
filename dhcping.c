@@ -27,9 +27,9 @@
 /*
  *
  * forked from dhcping v1.3
- * modifications by <neuhold.an@gmail.com>
+ * modifications by <nean.and.i@gmail.com>
  *
- * dhcping.c,v 1.4f <neuhold.an@gmail.com>
+ * dhcping.c,v 1.4f <nean.and.i@gmail.com>
  * changelog: dhcpleaseactive
  *
  * USE DHCPDUMP FOR MONITORING PURPOSES!
@@ -101,7 +101,7 @@ void doargs(int argc,char **argv)
 
   if (argc==1)
     {
-      printf("dhcping v1.4f <neuhold.an@gmail.com>\
+      printf("dhcping v1.4f <nean.and.i@gmail.com>\
 \n\
 \n\
 usage: dhcping -c <ciaddr> -g <giaddr> -h <chaddr> -s <server-ip> \
